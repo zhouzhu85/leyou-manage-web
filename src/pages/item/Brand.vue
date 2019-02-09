@@ -152,6 +152,7 @@
       },
       getDataFromApi() {
         this.loading = true;
+
         this.$http.get("/item/brand/page",{
           params:{
             page:this.pagination.page,
