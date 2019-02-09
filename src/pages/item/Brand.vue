@@ -152,12 +152,6 @@
       },
       getDataFromApi() {
         this.loading = true;
-        // 200ms后返回假数据
-        // window.setTimeout(() => {
-        //   this.items = brandData.slice(0,4);
-        //   this.totalItems = 100
-        //   this.loading = false;
-        // }, 200)
         this.$http.get("/item/brand/page",{
           params:{
             page:this.pagination.page,
