@@ -118,7 +118,6 @@
         dialog: false, // 是否弹出对话框，默认是false，隐藏对话框
         currentNode: {},// 当前被选中的商品分类节点
         isInsert: false,// 新增或者修改
-        units:config.unitOption// 数值类型的可选单位
         // treeData:treeData // 假的商品分类数据
       }
     },
