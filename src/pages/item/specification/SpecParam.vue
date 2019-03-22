@@ -156,6 +156,7 @@ export default {
             this.$http.delete("/item/spec/param/" + id)
             .then(() => {
                 this.$message.success("删除成功");
+              this.loadData();
             })
             .catch(() => {
                 this.$message.error("删除失败");
@@ -172,7 +173,7 @@ export default {
         this.$http({
             method: this.isEdit ? 'put' : 'post',
             url: '/item/spec/param',
-            data: p,
+            data: this.$qs.stringify(p),
         }).then(() => {
             // 关闭窗口
             this.show = false;

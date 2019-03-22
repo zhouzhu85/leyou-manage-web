@@ -92,7 +92,7 @@ export default {
            this.$http({
             method: this.isEdit ? 'put' : 'post',
             url: '/item/spec/group',
-            data: this.group
+            data: this.$qs.stringify(this.group)
           }).then(() => {
             // 关闭窗口
             this.show = false;
@@ -109,6 +109,8 @@ export default {
                 .then(() => {
                     this.$message.success("删除成功");
                     this.loadData();
+                }).catch(error =>{
+                  this.$message.error(error.response.data.message);
                 })
           })
       },
