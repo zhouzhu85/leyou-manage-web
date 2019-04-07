@@ -6,7 +6,7 @@
       <v-flex xs3>
         状态：
         <v-btn-toggle mandatory v-model.lazy="filter.saleable">
-          <v-btn flat>
+          <v-btn flat >
             全部
           </v-btn>
           <v-btn flat :value="true">
@@ -45,11 +45,11 @@
           <v-btn icon @click="editGoods(props.item)">
             <i class="el-icon-edit"/>
           </v-btn>
-          <v-btn icon>
+          <v-btn icon @click="deleteGood(props.item.id)">
             <i class="el-icon-delete"/>
           </v-btn>
-          <v-btn icon v-if="props.item.saleable">下架</v-btn>
-          <v-btn icon v-else>上架</v-btn>
+          <v-btn icon v-if="props.item.saleable" @click="upperAndLower(props.item.saleable,props.item.id)">下架</v-btn>
+          <v-btn icon v-else @click="upperAndLower(props.item.saleable,props.item.id)">上架</v-btn>
         </td>
       </template>
     </v-data-table>
@@ -154,6 +154,44 @@
         // 把oldBrand变为null
         this.oldGoods = {};
       },
+      deleteGood(id){
+        this.$message.confirm("是否删除该商品",{
+          confirmButtonText: '确定删除',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(()=>{
+          this.$http.delete("/item/delete/"+id).then(()=>{
+            this.$message.success("删除成功");
+            //重新加载数据
+            this.getDataFromServer();
+          }).catch((e)=>{
+            this.$message.error(e.response.data.message)
+          })
+        }).catch(()=>{
+          this.$message.info("已取消删除")
+        })
+      },
+      upperAndLower(saleable,id){
+        this.$message.confirm("是否"+(saleable?"下架":"上架"),{
+          confirmButtonText: '确定删除',
+          cancelButtonText: '取消'
+        }).then(()=>{
+
+          this.$http.get("/item/updateSaleable",{
+            params:{
+              spuId:id,
+              saleable: saleable?false:true
+            }
+          }).then(()=>{
+            this.$message.success((saleable?"下架":"上架")+"成功");
+            this.getDataFromServer();
+          }).catch(()=>{
+            this.$message.error((saleable?"下架":"上架")+"失败");
+          })
+
+        })
+
+      },
       async editGoods(oldGoods) {
         // 发起请求，查询商品详情和skus
         oldGoods.spuDetail = await this.$http.loadData("/item/spu/detail/" + oldGoods.id);
@@ -166,7 +204,7 @@
         this.oldGoods = oldGoods;
       },
       closeWindow() {
-        console.log(1)
+        //console.log(1)
         // 重新加载数据
         this.getDataFromServer();
         // 关闭窗口
